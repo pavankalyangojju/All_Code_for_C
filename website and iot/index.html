@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="x-icon" href="https://private-user-images.githubusercontent.com/95854682/290986368-a13eb8fa-aecc-4dce-9825-33c6c6e21aa8.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTEiLCJleHAiOjE3MDI3MjI2MTYsIm5iZiI6MTcwMjcyMjMxNiwicGF0aCI6Ii85NTg1NDY4Mi8yOTA5ODYzNjgtYTEzZWI4ZmEtYWVjYy00ZGNlLTk4MjUtMzNjNmM2ZTIxYWE4LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFJV05KWUFYNENTVkVINTNBJTJGMjAyMzEyMTYlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjMxMjE2VDEwMjUxNlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTNjZmMyZWQwMDQzZjViZTFlOTQ2YTRiOGVmM2Y2NmIxOTY0NTZjYTYxYzZiYWE3YjYzYjE3NDJiODI1ZTkyOGMmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.hGjX8kAb8ByV-1dT4Ia2WhqMo6kK7E2OIIT46SNPg1s">
+    <title>API Data Display</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        th,
+        td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        #img-title {
+            display: flex;
+            margin-left: 40%;
+        }
+        
+        #img-title>img {
+            /* border: 1px red solid; */
+            height: 70px;
+        }
+        
+        #logo>img {
+            /* border: 1px red solid; */
+            height: 50px;
+            width: 250px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="logo">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsreyz2TtaOfl7OPCeKNuNv3cztx1_F5ZLs5f3NflLTkT61z_TSYkpD41-1g29dJCkJQ&usqp=CAU" alt="">
+    </div>
+    <div id="img-title">
+        <img src="https://private-user-images.githubusercontent.com/95854682/290986221-be022487-67cf-4e16-9ae4-64f72e9ad1fc.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTEiLCJleHAiOjE3MDI3MjI1NDksIm5iZiI6MTcwMjcyMjI0OSwicGF0aCI6Ii85NTg1NDY4Mi8yOTA5ODYyMjEtYmUwMjI0ODctNjdjZi00ZTE2LTlhZTQtNjRmNzJlOWFkMWZjLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFJV05KWUFYNENTVkVINTNBJTJGMjAyMzEyMTYlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjMxMjE2VDEwMjQwOVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTA2OTBjYjU2M2U1YjQ4OWIwZDU5NDlkZjg1MzAzZDY3NjY1MTlmYjUyYTI1N2U1NDJjMzU3MGJmOTUzMDAwNDgmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.lhaUn2KZiDOtZ12tcD0kDdWzu41eeQwxVRLtOu5cJhU"
+            alt="">
+        <h1>Sensors Data</h1>
+    </div>
+    <table id="dataTable">
+    </table>
+
+    <script>
+        fetch('https://api.thingspeak.com/channels/2357125/feeds.json')
+            .then(response => response.json())
+            .then(data => {
+                const dataTable = document.getElementById('dataTable');
+
+
+                const headers = Object.keys(data.feeds[0]);
+
+
+                const headerRow = dataTable.insertRow();
+                headers.forEach(headerText => {
+                    const th = document.createElement('th');
+                    th.textContent = headerText;
+                    headerRow.appendChild(th);
+                });
+
+
+                data.feeds.forEach(feed => {
+                    const row = dataTable.insertRow();
+                    headers.forEach(header => {
+                        const cell = row.insertCell();
+                        cell.textContent = feed[header];
+                    });
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+</body>
+
+</html>
